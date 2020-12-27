@@ -1,0 +1,16 @@
+SELECT 
+	name,
+	weight_class,
+	victories,
+	COUNT(*) OVER weight_class (PARTITION BY weight_class)
+FROM comp_results; 
+
+
+
+SELECT 
+	name,
+	weight_class,
+	victories,
+	MAX(victories) OVER (PARTITION BY weight_class)
+FROM comp_results;
+		
