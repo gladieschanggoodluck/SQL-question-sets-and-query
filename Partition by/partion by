@@ -13,4 +13,17 @@ SELECT
 	victories,
 	MAX(victories) OVER (PARTITION BY weight_class)
 FROM comp_results;
-		
+
+### Getting aggregative data
+
+SELECT Gender, AVG(Salary), MAX(Salary), MIN(Salary)
+FROM Employees
+GROUP BY Gender
+
+## Getting both non-aggregative data and aggregative data
+SELECT Name, Salary, Gender
+COUNT(Gender) OVER (PARTITION BY Gender) AS GendersTotals,
+AVG(Salary) OVER (PARTITION BY Gender) AS AvgSal,
+MAX(Salary) OVER (PARTITION BY Gender) AS MaxSal,
+Min(Salary) OVER (PARTITION BY Gender) AS MinSal;
+FROM Employees 
