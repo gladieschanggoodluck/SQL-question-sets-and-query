@@ -1,0 +1,59 @@
+## Date: The future
+## Place: Mars
+## Mission: Learn about Viewa with increasingly complex examples
+## martian_confidential (martian_id, first_name, last_name, base_id, super_id, dna_id)
+## https://www.youtube.com/watch?v=8jU8SrAPn9c 
+
+SELECT * FROM martian_confidential;
+
+## some columns consist sensitive data such as dna_id, we can create VIEW to protect sensitive data
+## Step 1: Write a query retruning the data to appear in the view (No sensitive data)
+CREATE VIEW martian_public AS
+SELECT martian_id, first_name, last_name, base_id, super_id FROM martian_confidential;
+
+
+SELECT * FROM martian_public
+
+## If you want to select confidential data such as salary, dna_id. Those data is not present in martian_public
+
+## View Benefit: Security
+## Give permission to a view instead of tables with sensitive data.
+
+## Union example - Martian and Vistor Table toghether - how to avoid missing id ?
+SELECT CONCAT('m', martian_id) AS id, first_name, last_name, 'Martian' AS status
+FROM martian_public
+	Union
+SELECT CONCAT('v', visitor_id) AS id, first_name, last_name, 'Visitor' AS status
+FROM visitor;
+
+## Create View 
+
+CREATE VIEW people_on_mars AS
+SELECT CONCAT('m', martian_id) AS id, first_name, last_name, 'Martian' AS status
+FROM martian_public
+	Union
+SELECT CONCAT('v', visitor_id) AS id, first_name, last_name, 'Visitor' AS status
+FROM visitor;
+
+SELECT first_name FROM people_on_mars
+ORDER BY first_name;
+
+## VIEW Benifit: Simplicity
+## Hide complexity: Common queries should be simple.
+
+## 3 Table example
+## base (base_id, base_name, founded)
+## inventory (base_id, supply_id, quantity)
+## supply (supply_id, name, description, quantity)
+
+## View Task
+## Task: Create view
+## base_storage
+## Contents: supply quantities at each base
+CREATE VIEW  base_storage AS
+SELECT  b.base_id, s.supply_id, s.name,
+        COALSCE ((SELECT quantity FROM inventory WHERE base_id = b.base_id AND supply_id = s.supply_id), 0)
+FROM base as b 
+CROSS JOIN supply as s;
+
+
